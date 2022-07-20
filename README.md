@@ -5,3 +5,4 @@
 - word count
 - char count
 - most frequent word
+- history of used texts
