@@ -1,0 +1,128 @@
+{
+  "name": "text-tool",
+  "version": "0.1.0",
+  "homepage": "./",
+  "private": true,
+  "main": "electron.js",
+  "author": {
+    "name": "Matheus Marabesi",
+    "url": "https://marabesi.com"
+  },
+  "description": "text-tool allows you to interact with text without forgetting your privacy",
+  "categories": [
+    "Programming Languages"
+  ],
+  "dependencies": {
+    "@testing-library/jest-dom": "^5.14.1",
+    "@testing-library/react": "^11.2.7",
+    "@testing-library/user-event": "^13.5.0",
+    "@types/jest": "^26.0.24",
+    "@types/react": "^17.0.24",
+    "@types/react-dom": "^17.0.9",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-icons": "^4.4.0",
+    "react-scripts": "4.0.3",
+    "typescript": "^4.4.3",
+    "use-file-upload": "^1.0.11",
+    "web-vitals": "^1.1.2"
+  },
+  "devDependencies": {
+    "@craco/craco": "^6.3.0",
+    "@testing-library/dom": "^8.11.3",
+    "@testing-library/webdriverio": "^3.0.4",
+    "@types/node": "^16.10.5",
+    "@types/react-router-dom": "^5.3.3",
+    "@types/webdriverio": "^4.13.3",
+    "autoprefixer": "^9.8.7",
+    "babel-plugin-preval": "^5.0.0",
+    "concurrently": "^6.2.1",
+    "coveralls": "^3.1.1",
+    "cypress": "^8.6.0",
+    "cypress-cucumber-preprocessor": "^4.3.1",
+    "electron": "^15.5.5",
+    "electron-builder": "^22.13.1",
+    "eslint": "^7.32.0",
+    "eslint-plugin-cypress": "^2.12.1",
+    "eslint-plugin-react": "^7.26.1",
+    "http-server": "^14.0.0",
+    "husky": "^7.0.2",
+    "postcss": "^8.2.13",
+    "sass": "^1.43.4",
+    "spectron": "^15.0.0",
+    "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.2.14",
+    "wait-on": "^6.0.0"
+  },
+  "postinstall": "electron-builder install-app-deps && husky install",
+  "scripts": {
+    "start": "HOST=0.0.0.0 BROWSER=none craco start",
+    "build": "craco build",
+    "test": "craco test src/",
+    "test:all": "npm run e2e && npm run test -- --watchAll=false",
+    "coverage": "craco test --env=jsdom --no-cache --collectCoverage --ci --watchAll=false --colors",
+    "coveralls": "npm run coverage && coveralls < coverage/lcov.info",
+    "e2e": "CYPRESS_BASE_URL=http://localhost:3000 cypress run ",
+    "eject": "craco eject",
+    "dev": "concurrently -k \"BROWSER=none npm start\" \"npm:electron\"",
+    "setup": "npm run build && cp package.json ./build",
+    "package": "npm run setup && electron-builder --linux snap -p never",
+    "package-windows": "npm run setup && electron-builder --win --x64 -p never",
+    "build-app-image": "npm run setup && electron-builder --linux AppImage -p never",
+    "electron": "npm run setup && wait-on tcp:3000 && electron build/",
+    "lint": "eslint ./**/*.{ts,tsx}",
+    "serve": "http-server ./build -p 3000"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest",
+      "eslint:recommended",
+      "plugin:react/recommended",
+      "plugin:react/jsx-runtime",
+      "plugin:cypress/recommended"
+    ],
+    "rules": {
+      "semi": [
+        2,
+        "always"
+      ],
+      "indent": [
+        "error",
+        2
+      ],
+      "quotes": [
+        "error",
+        "single"
+      ],
+      "object-curly-spacing": [
+        "error",
+        "always"
+      ]
+    }
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "build": {
+    "productName": "text-tool",
+    "appId": "org.marabesi.text-tool",
+    "linux": {
+      "category": "Utility",
+      "icon": "logo512.png"
+    }
+  },
+  "jest": {
+    "transformIgnorePatterns": [
+      "<rootDir>/node_modules/?!(.*)"
+    ]
+  }
+}
