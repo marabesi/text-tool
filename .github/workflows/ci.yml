@@ -1,0 +1,88 @@
+name: Node CI
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+on:
+  workflow_dispatch:
+  push:
+    branches: main
+
+env:
+  CI: true
+  COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_TOKEN }}
+  COVERALLS_GIT_BRANCH: main
+
+jobs:
+  build:
+    runs-on: ubuntu-18.04
+
+    steps:
+      - uses: actions/checkout@v1
+      # - name: Setup kernel for react native, increase watchers
+      #   run: echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
+
+      - name: Use Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16
+          cache: 'npm'
+
+      - name: install wine
+        run: |
+          sudo dpkg --add-architecture i386
+          sudo apt-get update
+          sudo apt-get install -f wine-stable wine32
+
+      - name: export display
+        run: |
+          /usr/bin/Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+          echo ">>> Started xvfb"
+
+      - name: install
+        run: npm install --legacy-peer-deps
+
+      - name: test
+        run: npm run coveralls
+        env:
+          CI: true
+          DISPLAY: ':99.0'
+
+      - name: package
+        run: npm run package
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+
+#      - name: Run cypress (acceptance tests)
+#        uses: cypress-io/github-action@v2
+#        env:
+#          CYPRESS_BASE_URL: 'http://localhost:3000'
+#        with:
+#          wait-on: 'http://localhost:3000'
+#          install-command: npm install --legacy-peer-deps
+#          start: npm run serve
+
+      - name: package for windows
+        run: npm run package-windows
+
+      - name: fetch snap file
+        id: snap_file
+        run: echo "::set-output name=name::$(ls dist/*.snap | sed "s/dist\///g" | sed "s/\.snap//g")"
+
+      - name: fetch windows file
+        id: windows_file
+        run: echo "::set-output name=name::$(ls dist/*.exe | sed "s/dist\///g" | sed "s/\.snap//g")"
+
+      - name: Archive windows binary
+        uses: actions/upload-artifact@v2
+        with:
+          name: "${{ steps.snap_file.outputs.name }}"
+          path: "dist/${{ steps.windows_file.outputs.name }}"
+
+      - name: publish snap edge channel
+        uses: snapcore/action-publish@v1
+        with:
+          store_login: ${{ secrets.STORE_LOGIN }}
+          snap: "dist/${{ steps.snap_file.outputs.name }}.snap"
+          release: edge
