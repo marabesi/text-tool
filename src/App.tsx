@@ -1,13 +1,22 @@
 import { Editor } from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+import { useState } from 'react';
+import { EditorState } from 'draft-js';
 function App() {
-  let editorState;
+  const [editor, setEditor] = useState<EditorState>(EditorState.createEmpty());
+
   return (
     <Editor
-      editorState={editorState}
+      webDriverTestID="text-area"
+      editorState={editor}
       toolbarClassName="toolbarClassName"
       wrapperClassName="wrapperClassName"
-      editorClassName="editorClassName"
+      editorClassName="my-editor"
+      onEditorStateChange={ed => {
+        console.log(ed.getCurrentContent().getPlainText());
+        setEditor(ed);
+      }
+      }
     />
   );
 }
