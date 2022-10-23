@@ -33,3 +33,4 @@ build-dir/
 cypress/videos/
 cypress/screenshots/
 .env
+.fleet
