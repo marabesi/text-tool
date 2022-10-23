@@ -5,15 +5,7 @@ module.exports = {
     safelist: [],
   },
   darkMode: 'class',
-  theme: {
-    extend: {
-      backgroundColor: theme => ({
-        ...theme,
-        'text-tool-yellow': '#ffe203',
-        'text-tool-blue': '#62d4fd',
-      }),
-    },
-  },
+  theme: {},
   variants: {
     extend: {},
   },

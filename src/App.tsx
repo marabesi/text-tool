@@ -15,14 +15,21 @@ function App() {
   }, [text]);
 
   return (
-    <div>
-      <p>Chars: {charCount}</p>
-      <p>Words: {wordCount}</p>
-      <textarea
-        data-testid="text-area"
-        onChange={changed => setText(changed.target.value)}
-        defaultValue={text}
-      />
+    <div className="flex flex-col">
+      <div className="flex">
+        <p className="p-2 m-2 border-2">Chars: {charCount}</p>
+        <p className="p-2 m-2 border-2">Words: {wordCount}</p>
+      </div>
+
+      <div className="m-2">
+        <textarea
+          className="border-2 w-full outline-none"
+          data-testid="text-area"
+          onChange={changed => setText(changed.target.value)}
+          defaultValue={text}
+          rows={10}
+        />
+      </div>
     </div>
   );
 }
