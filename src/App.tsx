@@ -8,9 +8,10 @@ function App() {
 
   useEffect(() => {
     setCharCount(text.length);
+    const strings = text.split(' ');
 
     if (text) {
-      setWordCount(text.split(' ').length);
+      setWordCount(strings.filter(strings => strings !== '').length);
     } else {
       setWordCount(0);
     }
@@ -19,8 +20,8 @@ function App() {
   return (
     <div className="flex flex-col">
       <div className="flex">
-        <p className="p-2 m-2 border-2">Chars: {charCount}</p>
-        <p className="p-2 m-2 border-2">Words: {wordCount}</p>
+        <p className="p-2 m-2 border-2 w-60">Chars: {charCount}</p>
+        <p className="p-2 m-2 border-2 w-60">Words: {wordCount}</p>
       </div>
 
       <div className="m-2">
