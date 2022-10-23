@@ -1,8 +1,6 @@
-import { act, render, waitFor } from '@testing-library/react';
+import { act, render } from '@testing-library/react';
 import App from './App';
 import userEvent from '@testing-library/user-event';
-
-window.scrollTo = () => {};
 
 describe('text tool', () => {
   it('should render text area', () => {
@@ -10,21 +8,21 @@ describe('text tool', () => {
     expect(getByTestId('text-area')).toBeInTheDocument();
   });
 
-  it('should render result area', () => {
-    const { getByTestId } = render(<App />);
-    expect(getByTestId('result')).toBeInTheDocument();
+  it('should render zero chars when text area has no text', () => {
+    const { getByText } = render(<App />);
+    expect(getByText('Chars: 0')).toBeInTheDocument();
   });
 
-  it.skip('should type the text into the editor', async () => {
-    const { container, getByTestId } = render(<App/>);
-    const editor = container.querySelector('.my-editor') as HTMLElement;
+  it.each([
+    ['mytext', '6'],
+    ['text', '4'],
+  ])('should display the number os characters a word has (%s)', (text: string, chars: string) => {
+    const { getByTestId, getByText } = render(<App />);
 
     act(() => {
-      userEvent.type(editor, 'random text');
+      userEvent.type(getByTestId('text-area'), text);
     });
 
-    await waitFor(() => {
-      expect(getByTestId('result')).toHaveTextContent('random text');
-    });
+    expect(getByText(`Chars: ${chars}`)).toBeInTheDocument();
   });
 });

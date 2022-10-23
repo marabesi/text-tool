@@ -1,23 +1,20 @@
-import { Editor } from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
-import { useState } from 'react';
-import { EditorState } from 'draft-js';
+import { useEffect, useState } from 'react';
 function App() {
-  const [editor, setEditor] = useState<EditorState>(EditorState.createEmpty());
-
+  const [text, setText] = useState<string>('');
+  const [charCount, setCharCount] = useState<number>();
+  useEffect(() => {
+    setCharCount(text.length);
+  }, [text]);
   return (
-    <Editor
-      webDriverTestID="text-area"
-      editorState={editor}
-      toolbarClassName="toolbarClassName"
-      wrapperClassName="wrapperClassName"
-      editorClassName="my-editor"
-      onEditorStateChange={ed => {
-        console.log(ed.getCurrentContent().getPlainText());
-        setEditor(ed);
-      }
-      }
-    />
+    <div>
+      <p>Chars: {charCount}</p>
+      <textarea
+        data-testid="text-area"
+        onChange={changed => setText(changed.target.value)}
+        defaultValue={text}
+      />
+    </div>
   );
 }
 
