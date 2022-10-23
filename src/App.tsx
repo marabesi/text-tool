@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 function App() {
   const [text, setText] = useState<string>('');
   const [charCount, setCharCount] = useState<number>();
-  const [wordCount, setWordCount] = useState<number>(0);
+  const [wordCount, setWordCount] = useState<number>();
 
   useEffect(() => {
     setCharCount(text.length);
