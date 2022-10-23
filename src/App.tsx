@@ -11,6 +11,8 @@ function App() {
 
     if (text) {
       setWordCount(text.split(' ').length);
+    } else {
+      setWordCount(0);
     }
   }, [text]);
 

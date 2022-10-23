@@ -43,4 +43,17 @@ describe('text tool', () => {
 
     expect(getByText(`Words: ${count}`)).toBeInTheDocument();
   });
+
+  it('should reset counters after deleting text', async () => {
+    const { getByTestId, getByText } = render(<App/>);
+
+    act(() => {
+      userEvent.type(getByTestId('text-area'), 'my random text');
+    });
+
+    await userEvent.clear(getByTestId('text-area'));
+
+    expect(getByText('Chars: 0')).toBeInTheDocument();
+    expect(getByText('Words: 0')).toBeInTheDocument();
+  });
 });
