@@ -25,4 +25,22 @@ describe('text tool', () => {
 
     expect(getByText(`Chars: ${chars}`)).toBeInTheDocument();
   });
+
+  it('should count word', () => {
+    const { getByText } = render(<App />);
+
+    expect(getByText('Words: 0')).toBeInTheDocument();
+  });
+
+  it.each([
+    ['my word', '2']
+  ])('should count word %s', (text, count) => {
+    const { getByText, getByTestId } = render(<App />);
+
+    act(() => {
+      userEvent.type(getByTestId('text-area'), text);
+    });
+
+    expect(getByText(`Words: ${count}`)).toBeInTheDocument();
+  });
 });
