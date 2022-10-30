@@ -49,7 +49,7 @@ function App() {
   }, [text]);
 
   return (
-    <div className="flex">
+    <div className="flex h-screen overflow-hidden">
       <div className="flex flex-col w-4/5">
         <div className="flex">
           <p className="p-2 m-2 border-2 w-60">Chars: {charCount}</p>
@@ -68,7 +68,7 @@ function App() {
           />
         </div>
       </div>
-      <div>
+      <div className="overflow-y-scroll w-1/5">
         <h1>Most frequent words</h1>
         {mostFrequent.map((frequent, index) => <p key={index}>{frequent.rank}. {frequent.word}: {frequent.count}</p>)}
       </div>
