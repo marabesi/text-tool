@@ -90,5 +90,21 @@ describe('text tool', () => {
 
       expect(getByText(`1. ${first}: ${count}`)).toBeInTheDocument();
     });
+
+    it('should clean up frequent stats once textarea is erased', () => {
+      const { getByTestId, getByText, queryByText } = render(<App/>);
+
+      act(() => {
+        userEvent.type(getByTestId('text-area'), 'my duplicated text my duplicated text');
+      });
+
+      expect(getByText('1. my: 2')).toBeInTheDocument();
+
+      act(() => {
+        userEvent.clear(getByTestId('text-area'));
+      });
+
+      expect(queryByText('1. my: 2')).not.toBeInTheDocument();
+    });
   });
 });
