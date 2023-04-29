@@ -107,4 +107,44 @@ describe('text tool', () => {
       expect(queryByText('1. my: 2')).not.toBeInTheDocument();
     });
   });
+
+  describe('stop words', () => {
+    it('should render text area for stop words', () => {
+      const { getByPlaceholderText } = render(<App/>);
+
+      expect(getByPlaceholderText('Stop words')).toBeInTheDocument();
+    });
+
+    it('should ignore stop words', () => {
+      const { getByTestId, getByText } = render(<App/>);
+
+      act(() => {
+        userEvent.type(getByTestId('stop-words-area'), 'my');
+      });
+
+      act(() => {
+        userEvent.type(getByTestId('text-area'), 'my duplicated text my duplicated text');
+      });
+
+      expect(getByText('1. duplicated: 2')).toBeInTheDocument();
+    });
+
+    it('should count words whenever stop words does not exists', () => {
+      const { getByTestId, getByText } = render(<App/>);
+
+      act(() => {
+        userEvent.type(getByTestId('stop-words-area'), 'my');
+      });
+
+      act(() => {
+        userEvent.type(getByTestId('text-area'), 'my duplicated text my duplicated text');
+      });
+
+      act(() => {
+        userEvent.clear(getByTestId('stop-words-area'));
+      });
+
+      expect(getByText('1. my: 2')).toBeInTheDocument();
+    });
+  });
 });

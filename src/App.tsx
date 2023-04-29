@@ -12,13 +12,25 @@ function App() {
   const [charCount, setCharCount] = useState<number>();
   const [wordCount, setWordCount] = useState<number>();
   const [mostFrequent, setMostFrequent] = useState<MostFrequent[]>([]);
+  const [stopWords, setStopWords] = useState<string[]>([]);
 
   useEffect(() => {
     setCharCount(text.length);
     const strings = text.split(' ');
 
     if (text) {
-      const listOfStrings = strings.filter(strings => strings !== '');
+      let listOfStrings = strings.filter(strings => strings !== '');
+
+      if (stopWords.length) {
+        listOfStrings = listOfStrings.filter(strings => {
+          for (let stop of stopWords) {
+            if (strings.includes(stop)) {
+              return false;
+            }
+          }
+          return true;
+        });
+      }
 
       const empty = [];
       for (const word in listOfStrings) {
@@ -47,7 +59,12 @@ function App() {
       setWordCount(0);
       setMostFrequent([]);
     }
-  }, [text]);
+  }, [text, stopWords]);
+
+  const onStopWordsChanged = (value: string) => {
+    const strings = value.split(',');
+    setStopWords(strings.filter(stop => stop !== ''));
+  };
 
   return (
     <div className="flex h-screen overflow-hidden">
@@ -64,12 +81,19 @@ function App() {
         <div className="m-2">
           <textarea
             className="border-2 w-full outline-none"
-            style={{ minHeight: '90vh' }}
+            style={{ minHeight: '70vh' }}
             data-testid="text-area"
             onChange={changed => setText(changed.target.value)}
             defaultValue={text}
             rows={10}
             placeholder="Type here"
+          />
+          <textarea
+            data-testid="stop-words-area"
+            className="border-2 w-full outline-none"
+            style={{ minHeight: '15vh' }}
+            onChange={changed => onStopWordsChanged(changed.target.value)}
+            placeholder="Stop words"
           />
         </div>
       </div>
