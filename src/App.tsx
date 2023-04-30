@@ -97,7 +97,7 @@ function App() {
             className="border-2 w-full outline-none"
             style={{ minHeight: '15vh' }}
             onChange={changed => onStopWordsChanged(changed.target.value)}
-            placeholder="Stop words"
+            placeholder="Stop words: the, an, I"
           />
         </div>
       </div>

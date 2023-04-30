@@ -112,7 +112,7 @@ describe('text tool', () => {
     it('should render text area for stop words', () => {
       const { getByPlaceholderText } = render(<App/>);
 
-      expect(getByPlaceholderText('Stop words')).toBeInTheDocument();
+      expect(getByPlaceholderText('Stop words: the, an, I')).toBeInTheDocument();
     });
 
     it.each([
