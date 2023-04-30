@@ -63,7 +63,11 @@ function App() {
 
   const onStopWordsChanged = (value: string) => {
     const strings = value.split(',');
-    setStopWords(strings.filter(stop => stop !== ''));
+    const cleanedStopWords = strings
+      .filter(stop => stop !== '')
+      .map(stop => stop.replace('\n', ''));
+
+    setStopWords(cleanedStopWords);
   };
 
   return (

@@ -115,18 +115,22 @@ describe('text tool', () => {
       expect(getByPlaceholderText('Stop words')).toBeInTheDocument();
     });
 
-    it('should ignore stop words', () => {
+    it.each([
+      // ['my duplicated text my duplicated text', 'my', '1. duplicated: 2'],
+      ['my duplicated text my duplicated text', `my,
+duplicated`, '1. text: 2'],
+    ])('should ignore stop words', (text, stopWords, expected) => {
       const { getByTestId, getByText } = render(<App/>);
 
       act(() => {
-        userEvent.type(getByTestId('stop-words-area'), 'my');
+        userEvent.type(getByTestId('stop-words-area'), stopWords);
       });
 
       act(() => {
-        userEvent.type(getByTestId('text-area'), 'my duplicated text my duplicated text');
+        userEvent.type(getByTestId('text-area'), text);
       });
 
-      expect(getByText('1. duplicated: 2')).toBeInTheDocument();
+      expect(getByText(expected)).toBeInTheDocument();
     });
 
     it('should count words whenever stop words does not exists', () => {
