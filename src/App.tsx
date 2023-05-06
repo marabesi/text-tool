@@ -18,6 +18,10 @@ function App() {
   const [originalStopWords, setOriginalStopWords] = useState<string>(defaultStopWords);
 
   useEffect(() => {
+    onStopWordsChanged(defaultStopWords);
+  }, []);
+
+  useEffect(() => {
     setCharCount(text.length);
     const strings = text.split(' ');
 

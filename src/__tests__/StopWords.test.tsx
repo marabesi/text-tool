@@ -88,6 +88,17 @@ duplicated`, '1. text: 2'],
 
       expect(getByText('1. my: 2')).toBeInTheDocument();
     });
+
+    it('should detect stop words on load', async () => {
+      const { getByTestId, queryByText } = render(<App/>);
+      act(() => {
+        userEvent.type(getByTestId('text-area'), 'bread not');
+      });
+
+      await waitFor(() => {
+        expect(queryByText('2. not: 1')).not.toBeInTheDocument();
+      });
+    });
   });
 
   describe('with stop words disabled', function () {
