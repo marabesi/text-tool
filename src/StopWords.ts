@@ -18,4 +18,4 @@ we,
 from,
 why,
 you,
-as`;
+as`.replace(/\n/g, '');
