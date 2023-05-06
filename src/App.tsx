@@ -1,12 +1,7 @@
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import { useEffect, useState } from 'react';
-import { defaultStopWords } from './StopWords';
-
-interface MostFrequent {
-  word: string
-  count: number
-  rank: number
-}
+import { defaultStopWords } from './word-count/StopWords';
+import { MostFrequent } from './word-count/types';
 
 function App() {
   const [text, setText] = useState<string>('');
