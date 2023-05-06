@@ -1,4 +1,5 @@
 export const defaultStopWords = `not,
+no,
 in,
 if,
 get,
@@ -18,4 +19,9 @@ we,
 from,
 why,
 you,
-as`.replace(/\n/g, '');
+as,
+#,
+-,
+it,
+will,
+so`.replace(/\n/g, '');
