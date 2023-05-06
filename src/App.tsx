@@ -1,5 +1,6 @@
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import { useEffect, useState } from 'react';
+import { defaultStopWords } from './StopWords';
 
 interface MostFrequent {
   word: string
@@ -13,6 +14,8 @@ function App() {
   const [wordCount, setWordCount] = useState<number>();
   const [mostFrequent, setMostFrequent] = useState<MostFrequent[]>([]);
   const [stopWords, setStopWords] = useState<string[]>([]);
+  const [isStopWordsEnabled, setIsStopWordsEnabled] = useState<boolean>(true);
+  const [originalStopWords, setOriginalStopWords] = useState<string>(defaultStopWords);
 
   useEffect(() => {
     setCharCount(text.length);
@@ -21,7 +24,7 @@ function App() {
     if (text) {
       let listOfStrings = strings.filter(strings => strings !== '');
 
-      if (stopWords.length) {
+      if (stopWords.length && isStopWordsEnabled) {
         listOfStrings = listOfStrings.filter(strings => {
           for (let stop of stopWords) {
             if (strings.includes(stop)) {
@@ -59,9 +62,10 @@ function App() {
       setWordCount(0);
       setMostFrequent([]);
     }
-  }, [text, stopWords]);
+  }, [text, stopWords, isStopWordsEnabled]);
 
   const onStopWordsChanged = (value: string) => {
+    setOriginalStopWords(value);
     const strings = value.split(',');
     const cleanedStopWords = strings
       .filter(stop => stop !== '')
@@ -73,15 +77,24 @@ function App() {
   return (
     <div className="flex h-screen overflow-hidden">
       <div className="flex flex-col w-4/5">
-        <div className="flex">
+        <div className="flex items-center">
           <p className="p-2 m-2 border-2 w-60">
             Chars: {charCount}
           </p>
           <p className="p-2 m-2 border-2 w-60">
             Words: {wordCount}
           </p>
+          <label htmlFor="stopwords">
+            Ignore stop words
+            <input
+              type="checkbox"
+              id="stopwords"
+              className="ml-2"
+              checked={isStopWordsEnabled}
+              onChange={changed => setIsStopWordsEnabled(changed.target.checked)}
+            />
+          </label>
         </div>
-
         <div className="m-2">
           <textarea
             className="border-2 w-full outline-none"
@@ -98,6 +111,8 @@ function App() {
             style={{ minHeight: '15vh' }}
             onChange={changed => onStopWordsChanged(changed.target.value)}
             placeholder="Stop words: the, an, I"
+            defaultValue={originalStopWords}
+            disabled={!isStopWordsEnabled}
           />
         </div>
       </div>
