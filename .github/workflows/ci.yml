@@ -32,7 +32,7 @@ jobs:
 
       - name: install wine
         run: |
-          sudo dpkg --add-architecture i386
+          sudo apt-cache policy libc6 libgcc1 multiarch-support libc6-i386 libc6:i386 libgcc1:i386 multiarch-support:i386
           sudo apt-get update
           sudo apt-get install -f wine-stable wine32
 
