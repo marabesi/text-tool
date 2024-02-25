@@ -5,6 +5,7 @@ concurrency:
   cancel-in-progress: true
 
 on:
+  pull_request:
   workflow_dispatch:
   push:
     branches: main
@@ -68,6 +69,7 @@ jobs:
 #        run: npm run package-windows
 
       - name: fetch snap file
+        if: github.ref == 'refs/heads/main'
         id: snap_file
         run: echo "::set-output name=name::$(ls dist/*.snap | sed "s/dist\///g" | sed "s/\.snap//g")"
 
@@ -83,6 +85,7 @@ jobs:
 
       - name: publish snap edge channel
         uses: snapcore/action-publish@v1
+        if: github.ref == 'refs/heads/main'
         with:
           store_login: ${{ secrets.STORE_LOGIN }}
           snap: "dist/${{ steps.snap_file.outputs.name }}.snap"
