@@ -1,5 +1,5 @@
 import { act, render } from '@testing-library/react';
-import App from '../App';
+import App from '../reactjs/App';
 import userEvent from '@testing-library/user-event';
 
 describe('most frequent word', () => {

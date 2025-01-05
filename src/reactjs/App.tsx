@@ -1,7 +1,8 @@
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import { useEffect, useState } from 'react';
-import { defaultStopWords } from './word-count/StopWords';
-import { MostFrequent } from './word-count/types';
+import { defaultStopWords } from '../use-cases/types/StopWords';
+import { MostFrequent } from '../use-cases/types/types';
+import { format } from '../presenters/word-count';
 
 function App() {
   const [text, setText] = useState<string>('');
@@ -19,48 +20,10 @@ function App() {
   useEffect(() => {
     setCharCount(text.length);
     const strings = text.split(' ');
+    let { listOfStrings, sortByMostFrequent } = format(strings, stopWords, isStopWordsEnabled);
 
-    if (text) {
-      let listOfStrings = strings.filter(strings => strings !== '');
-
-      if (stopWords.length && isStopWordsEnabled) {
-        listOfStrings = listOfStrings.filter(strings => {
-          for (let stop of stopWords) {
-            if (strings.includes(stop)) {
-              return false;
-            }
-          }
-          return true;
-        });
-      }
-
-      const empty = [];
-      for (const word in listOfStrings) {
-        empty.push(
-          { rank: 0, word: listOfStrings[word], count: 0 }
-        );
-      }
-
-      for (const word in listOfStrings) {
-        const found: MostFrequent | undefined = empty.find(strings => strings.word === listOfStrings[word]);
-        if (found) {
-          found.count++;
-        }
-      }
-
-      const sortByMostFrequent = empty.sort((a, b) => b.count - a.count);
-
-      for (let i = 0; i < sortByMostFrequent.length; i++) {
-        sortByMostFrequent[i].rank = i + 1;
-      }
-
-      setMostFrequent(sortByMostFrequent);
-      setWordCount(listOfStrings.length);
-
-    } else {
-      setWordCount(0);
-      setMostFrequent([]);
-    }
+    setMostFrequent(sortByMostFrequent);
+    setWordCount(listOfStrings.length);
   }, [text, stopWords, isStopWordsEnabled]);
 
   const onStopWordsChanged = (value: string) => {

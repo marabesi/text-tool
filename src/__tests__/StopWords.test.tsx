@@ -1,7 +1,7 @@
 import { act, render, waitFor } from '@testing-library/react';
-import App from '../App';
+import App from '../reactjs/App';
 import userEvent from '@testing-library/user-event';
-import { defaultStopWords } from '../word-count/StopWords';
+import { defaultStopWords } from '../use-cases/types/StopWords';
 
 describe('stop words', () => {
   it('should render stop word checkbox', () => {
