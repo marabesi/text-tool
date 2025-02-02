@@ -67,7 +67,7 @@
     "package-windows": "npm run setup && electron-builder --win --x64 -p never",
     "build-app-image": "npm run setup && electron-builder --linux AppImage -p never",
     "electron": "npm run setup && wait-on tcp:3000 && electron build/",
-    "lint": "eslint ./**/*.{ts,tsx}",
+    "lint": "eslint ./src/**/*.{ts,tsx}",
     "serve": "http-server ./build -p 3000"
   },
   "eslintConfig": {
