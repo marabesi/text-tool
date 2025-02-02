@@ -1,4 +1,3 @@
-import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import { useEffect, useState } from 'react';
 import { defaultStopWords } from '../use-cases/types/StopWords';
 import { MostFrequent } from '../use-cases/types/types';
