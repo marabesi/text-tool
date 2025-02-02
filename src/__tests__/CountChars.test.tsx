@@ -1,4 +1,4 @@
-import { act, render } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import App from '../reactjs/App';
 import userEvent from '@testing-library/user-event';
 
@@ -16,14 +16,12 @@ describe('characters', () => {
   it.each([
     ['mytext', '6'],
     ['text', '4'],
-  ])('should display the number os characters a word has (%s)', (text: string, chars: string) => {
-    const { getByTestId, getByText } = render(<App />);
+  ])('should display the number os characters a word has (%s)', async (text: string, chars: string) => {
+    const { getByTestId, findByText } = render(<App />);
 
-    act(() => {
-      userEvent.type(getByTestId('text-area'), text);
-    });
+    await userEvent.type(getByTestId('text-area'), text);
 
-    expect(getByText(`Chars: ${chars}`)).toBeInTheDocument();
+    expect(await findByText(`Chars: ${chars}`)).toBeInTheDocument();
   });
 });
 

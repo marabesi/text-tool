@@ -1,58 +1,45 @@
-import { act, render } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import App from '../reactjs/App';
 import userEvent from '@testing-library/user-event';
 
 describe('words', () => {
-  it('should count word', () => {
-    const { getByText } = render(<App />);
+  it('should count word', async () => {
+    const { findByText } = render(<App />);
 
-    expect(getByText('Words: 0')).toBeInTheDocument();
+    expect(await findByText('Words: 0')).toBeInTheDocument();
   });
 
   describe('with stop words disabled', () => {
     it.each([
       ['my word', '2']
-    ])('should count word %s', (text, count) => {
-      const { getByText, getByTestId, getByLabelText } = render(<App />);
+    ])('should count word %s', async (text, count) => {
+      const { findByText, getByTestId, getByLabelText } = render(<App />);
+      await userEvent.click(getByLabelText('Ignore stop words'));
+      await userEvent.type(getByTestId('text-area'), text);
 
-      act(() => {
-        userEvent.click(getByLabelText('Ignore stop words'));
-      });
-
-      act(() => {
-        userEvent.type(getByTestId('text-area'), text);
-      });
-
-      expect(getByText(`Words: ${count}`)).toBeInTheDocument();
+      expect(await findByText(`Words: ${count}`)).toBeInTheDocument();
     });
 
     it.each([
       ['my random text ', 3],
       ['   ', 0],
     ])('should not count word when next one is space', async (text: string, count: number) => {
-      const { getByTestId, getByText, getByLabelText } = render(<App/>);
+      const { getByTestId, findByText, getByLabelText } = render(<App/>);
 
-      act(() => {
-        userEvent.click(getByLabelText('Ignore stop words'));
-      });
+      await userEvent.click(getByLabelText('Ignore stop words'));
+      await userEvent.type(getByTestId('text-area'), text);
 
-      act(() => {
-        userEvent.type(getByTestId('text-area'), text);
-      });
-
-      expect(getByText(`Words: ${count}`)).toBeInTheDocument();
+      expect(await findByText(`Words: ${count}`)).toBeInTheDocument();
     });
   });
 
   it('should reset counters after deleting text', async () => {
-    const { getByTestId, getByText } = render(<App/>);
+    const { getByTestId, findByText } = render(<App/>);
 
-    act(() => {
-      userEvent.type(getByTestId('text-area'), 'my random text');
-    });
+    await userEvent.type(getByTestId('text-area'), 'my random text');
 
     await userEvent.clear(getByTestId('text-area'));
 
-    expect(getByText('Words: 0')).toBeInTheDocument();
+    expect(await findByText('Words: 0')).toBeInTheDocument();
   });
 });

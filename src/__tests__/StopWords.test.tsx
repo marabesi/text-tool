@@ -36,57 +36,33 @@ duplicated`, '1. text: 2'],
     ])('should ignore stop words (%s, %s, %s)', async (text, stopWords, expected) => {
       const { getByTestId, getByText, getByPlaceholderText } = render(<App/>);
 
-      act(() => {
-        userEvent.clear(getByPlaceholderText('Stop words: the, an, I'));
-      });
-
-      act(() => {
-        userEvent.type(getByTestId('text-area'), text);
-      });
-
-      act(() => {
-        userEvent.type(getByTestId('stop-words-area'), stopWords);
-      });
+      await userEvent.clear(getByPlaceholderText('Stop words: the, an, I'));
+      await userEvent.type(getByTestId('text-area'), text);
+      await userEvent.type(getByTestId('stop-words-area'), stopWords);
 
       await waitFor(() => {
         expect(getByText(expected)).toBeInTheDocument();
       });
     });
 
-    it('should count words whenever stop words does not exists', () => {
-      const { getByTestId, getByText } = render(<App/>);
+    it('should count words whenever stop words does not exists', async () => {
+      const { getByTestId, findByText } = render(<App/>);
 
-      act(() => {
-        userEvent.type(getByTestId('stop-words-area'), 'my');
-      });
+      await userEvent.type(getByTestId('stop-words-area'), 'my');
+      await userEvent.type(getByTestId('text-area'), 'my duplicated text my duplicated text');
+      await userEvent.clear(getByTestId('stop-words-area'));
 
-      act(() => {
-        userEvent.type(getByTestId('text-area'), 'my duplicated text my duplicated text');
-      });
-
-      act(() => {
-        userEvent.clear(getByTestId('stop-words-area'));
-      });
-
-      expect(getByText('1. my: 2')).toBeInTheDocument();
+      expect(await findByText('1. my: 2')).toBeInTheDocument();
     });
 
-    it('should not count all words when stop words are disabled', () => {
-      const { getByTestId, getByText, getByLabelText } = render(<App/>);
+    it('should not count all words when stop words are disabled', async () => {
+      const { getByTestId, findByText, getByLabelText } = render(<App/>);
 
-      act(() => {
-        userEvent.click(getByLabelText('Ignore stop words'));
-      });
+      await userEvent.click(getByLabelText('Ignore stop words'));
+      await userEvent.type(getByTestId('stop-words-area'), 'my');
+      await userEvent.type(getByTestId('text-area'), 'my duplicated text my duplicated text');
 
-      act(() => {
-        userEvent.type(getByTestId('stop-words-area'), 'my');
-      });
-
-      act(() => {
-        userEvent.type(getByTestId('text-area'), 'my duplicated text my duplicated text');
-      });
-
-      expect(getByText('1. my: 2')).toBeInTheDocument();
+      expect(await findByText('1. my: 2')).toBeInTheDocument();
     });
 
     it('should detect stop words on load', async () => {
