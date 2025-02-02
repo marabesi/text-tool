@@ -4,11 +4,17 @@ import App from './reactjs/App';
 import reportWebVitals from './reportWebVitals';
 import './index.scss';
 
-const root = createRoot(document.getElementById('root')!);
-
-root.render(<React.StrictMode>
-  <App />
-</React.StrictMode>);
+const container = document.getElementById('root');
+if (container) {
+  const root = createRoot(container);
+  root.render(
+    <React.StrictMode>
+      <App />
+    </React.StrictMode>
+  );
+} else {
+  console.error('Root container not found');
+}
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
