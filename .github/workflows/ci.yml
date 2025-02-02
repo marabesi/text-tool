@@ -11,6 +11,7 @@ on:
     branches: main
 
 env:
+  DISABLE_ESLINT_PLUGIN: true
   CI: true
   COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_TOKEN }}
   COVERALLS_GIT_BRANCH: main

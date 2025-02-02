@@ -51,7 +51,7 @@
   },
   "postinstall": "electron-builder install-app-deps && husky install",
   "scripts": {
-    "start": "HOST=0.0.0.0 BROWSER=none craco start",
+    "start": "HOST=0.0.0.0 BROWSER=none craco --openssl-legacy-provider start",
     "build": "craco build",
     "test": "craco test src/",
     "test:all": "npm run e2e && npm run test -- --watchAll=false",
