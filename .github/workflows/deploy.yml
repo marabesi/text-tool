@@ -5,18 +5,26 @@ on:
   push:
     branches: main
 
+env:
+  DISABLE_ESLINT_PLUGIN: true
+  CI: true
+    
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout 🛎️
-        uses: actions/checkout@v2.3.1
+        uses: actions/checkout@v4
+
+      - name: Set Environment Variables
+        uses: tw3lveparsecs/github-actions-setvars@v0.1
+        with:
+          envFilePath: ./envvars.for.actions
 
       - name: Use Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
-          node-version: 16
-          cache: 'npm'
+          node-version: ${{ env.NODE_VERSION }}
 
       - name: Install
         run: npm install --legacy-peer-deps
