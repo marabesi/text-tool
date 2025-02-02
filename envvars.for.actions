@@ -1,1 +1,2 @@
 NODE_VERSION=20.7.0
+NODE_OPTIONS=--openssl-legacy-provider
